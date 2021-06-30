@@ -523,6 +523,16 @@ class TestRedshift(TestCase):
             {"select": {'name': 'c', "value": {"right": ['a',6]}}, "from": "b"}
             ,
         )
+    def test_right_in_where(self):
+        #https://docs.aws.amazon.com/redshift/latest/dg/r_LEFT.html
+        sql = "SELECT a as c FROM b WHERE RIGHT(a,2) in ('aa','bb','cc')"
+        result = parse(sql)
+        self.assertEqual(
+            result,
+            {'from': 'b', 'select': {'name': 'c', 'value': 'a'},
+            'where': {'in': [{'right': ['a', 2]}, {'literal': ['aa', 'bb', 'cc']}]}}
+            ,
+        )
     def test_left(self):
         #https://docs.aws.amazon.com/redshift/latest/dg/r_LEFT.html
         sql = "SELECT LEFT(a,6) as c FROM b"
