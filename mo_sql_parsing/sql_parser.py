@@ -63,6 +63,17 @@ cast = Group(
     CAST("op") + LB + expr("params") + AS + known_types("params") + RB
 ).addParseAction(to_json_call)
 
+#RIGHT
+right = Group(
+    RIGHT("op")+LB+delimitedList(expr("params"))+RB
+).addParseAction(to_json_call)
+
+#LEFT
+left = Group(
+    LEFT("op")+LB+delimitedList(expr("params"))+RB
+).addParseAction(to_json_call)
+
+
 _standard_time_intervals = MatchFirst([
     Keyword(d, caseless=True).addParseAction(lambda t: durations[t[0].lower()])
     for d in durations.keys()
@@ -131,6 +142,8 @@ compound = (
     | case
     | switch
     | cast
+    | right
+    | left
     | distinct
     | (LB + Group(ordered_sql) + RB)
     | (LB + Group(delimitedList(expr)).addParseAction(to_tuple_call) + RB)

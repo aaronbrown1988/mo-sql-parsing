@@ -514,3 +514,23 @@ class TestRedshift(TestCase):
                 "select": {"value": {"f_bigint_to_hhmmss": "device_timezone"}},
             },
         )
+    def test_right(self):
+        #https://docs.aws.amazon.com/redshift/latest/dg/r_LEFT.html
+        sql = "SELECT RIGHT(a,6) as c FROM b"
+        result = parse(sql)
+        self.assertEqual(
+            result,
+            {"select": {'name': 'c', "value": {"right": ['a',6]}}, "from": "b"}
+            ,
+        )
+    def test_left(self):
+        #https://docs.aws.amazon.com/redshift/latest/dg/r_LEFT.html
+        sql = "SELECT LEFT(a,6) as c FROM b"
+       
+        result = parse(sql)
+        self.assertEqual(
+            result,
+            {"select": {'name': 'c', "value": {"left": ['a',6]}}, "from": "b"}
+            ,
+        )
+
